@@ -1,20 +1,16 @@
 const express = require("express");
 const app = express();
-
-app.get("/greetings", (req, res) => {
-  // since this is REST api, we are sending a json object back w/ data -- that's it at its core!
-  res.json({ greeting: "Hello World" });
-});
+const records = require("./records");
 
 // Send a GET request to /quotes to READ a list of quotes
-app.get("/quotes", (req, res) => {
-  res.json(data);
+app.get("/quotes", async (req, res) => {
+  const quotes = await records.getQuotes();
+  res.json(quotes);
 });
 
 // Send a GET request to /quotes/:id to READ (view) a quote
-app.get("/quotes/:id", (req, res) => {
-  // if req.params.id (in client's url) matches the quote's ID
-  const quote = data.quotes.find(quote => quote.id == req.params.id);
+app.get("/quotes/:id", async (req, res) => {
+  const quote = await records.getQuote(req.params.id);
   res.json(quote);
 });
 
@@ -24,23 +20,3 @@ app.get("/quotes/:id", (req, res) => {
 // Send a GET request to /quotes/quote/random READ (view) a random quote
 
 app.listen(3000, () => console.log("Quote API listening on port 3000!"));
-
-const data = {
-  quotes: [
-    {
-      id: 8721,
-      quote: "We must accept finite disappointment, but we must never lose infinite hope.",
-      author: "Martin Luther King"
-    },
-    {
-      id: 5779,
-      quote: "Use what you’ve been through as fuel, believe in yourself and be unstoppable!",
-      author: "Yvonne Pierre"
-    },
-    {
-      id: 3406,
-      quote: "To succeed, you have to do something and be very bad at it for a while. You have to look bad before you can look really good.",
-      author: "Barbara DeAngelis"
-    }
-  ]
-};
