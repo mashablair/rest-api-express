@@ -22,22 +22,34 @@ app.get("/quotes", async (req, res) => {
 app.get("/quotes/:id", async (req, res) => {
   try {
     const quote = await records.getQuote(req.params.id);
-    res.json(quote);
+    if (quote) {
+      res.json(quote);
+    } else {
+      res.status(404).json({ message: "Quote NOT found" });
+    }
   } catch (err) {
-    res.json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 });
 
 // Send a POST request to /quotes to CREATE a new quote
 app.post("/quotes", async (req, res) => {
   try {
-    const quote = await records.createQuote({
-      quote: req.body.quote,
-      author: req.body.author
-    });
-    res.json(quote);
+    // this error line is for error testing
+    // throw new Error("Oh no!!!!");
+    if (req.body.author && req.body.quote) {
+      const quote = await records.createQuote({
+        quote: req.body.quote,
+        author: req.body.author
+      });
+      res.status(201).json(quote); // here we add status 201 = new record created
+    } else {
+      // bad request
+      res.status(400).json({ message: "Quote and author are required" });
+    }
   } catch (err) {
-    res.json({ message: err.message });
+    // by default status code is 200 OK, but here we change that in case of error:
+    res.status(500).json({ message: err.message });
   }
 });
 // Send a PUT request to /quotes/:id to UPDATE or edit a quote
