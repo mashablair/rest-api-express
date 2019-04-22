@@ -52,8 +52,40 @@ app.post("/quotes", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
 // Send a PUT request to /quotes/:id to UPDATE or edit a quote
+app.put("/quotes/:id", async (req, res) => {
+  try {
+    const quote = await records.getQuote(req.params.id);
+    if (quote) {
+      quote.quote = req.body.quote;
+      quote.author = req.body.author;
+
+      await records.updateQuote(quote);
+      res.status(204).end(); // this tells Express that we are done
+    } else {
+      res.status(404).json({ message: "Quote Not Found" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Send a DELETE request to /quotes/: id to DELETE a quote
+app.delete("/quotes/:id", async (req, res) => {
+  try {
+    const quote = await records.getQuote(req.params.id);
+    if (quote) {
+      await records.deleteQuote(quote);
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: "Not valid quote ID" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Send a GET request to /quotes/quote/random READ (view) a random quote
 
 app.listen(3000, () => console.log("Quote API listening on port 3000!"));
