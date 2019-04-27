@@ -82,10 +82,26 @@ app.delete("/quotes/:id", async (req, res) => {
       res.status(404).json({ message: "Not valid quote ID" });
     }
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    next(err);
   }
 });
 
 // Send a GET request to /quotes/quote/random READ (view) a random quote
+
+// if some of the route handlers above don't get to run, this will run
+app.use((req, res, next) => {
+  const err = new Error("Not Found");
+  err.status = 404;
+  next(err);
+});
+
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.json({
+    error: {
+      message: err.message
+    }
+  });
+});
 
 app.listen(3000, () => console.log("Quote API listening on port 3000!"));
