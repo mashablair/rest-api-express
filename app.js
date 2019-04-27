@@ -1,10 +1,12 @@
 const express = require("express");
+var cors = require("cors");
 const app = express();
 const routes = require("./routes");
 
 // express middleware --
 // when request comes in, it will go through this function before it hits one of our route handlers below
 // we expect request to come in as JSON
+app.use(cors());
 app.use(express.json());
 app.use("/api", routes);
 
