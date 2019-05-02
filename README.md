@@ -13,4 +13,5 @@ a popular framework written for Node.js.
 - [x] REST API Basics
 - [x] Managing Data and Asynchronous Code
 - [x] Create, Read, Update, Delete
-- [ ] Refactoring and Modularizing a REST API
+- [x] Refactoring and Modularizing a REST API
+- [ ] Create front-end files to interact with this back-end app
